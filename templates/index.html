@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Tricaster DataLink Titles</title>
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+  <nav class="navbar bg-body-danger">
+    <div id="nav-container" class="container-fluid">
+      <a class="navbar-brand" href="#">Tricaster DataLink Titles</a>
+      <div id="conn-stat" class="text-center"></div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+          </svg></span>
+      </button>
+      <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Settings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <form id="smb" action="/config" method="post">
+            <label class="form-label">DataLink Share</label>
+            <div  class="input-group mb-3">
+              <span class="input-group-text">smb://</span>
+              <input type="text" class="form-control" placeholder="Server" id="server-input" name="server"
+                aria-describedby="basic-addon3 basic-addon4">
+              <span class="input-group-text">/</span>
+              <input type="text" class="form-control" placeholder="Share" id="share-input" name="share"
+                aria-describedby="basic-addon3 basic-addon4">
+              <span class="input-group-text">/</span>
+              <input type="text" class="form-control" placeholder="File Path" id="path-input" name="file_path"
+                aria-describedby="basic-addon3 basic-addon4">
+            </div>
+
+            
+            <label class="form-label">SMB Credentials</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" name="user">Username</span>
+              <input type="text" class="form-control" id="user-input" name="username"
+                aria-describedby="basic-addon3 basic-addon4">
+              <span class="input-group-text" name="pass">Password</span>
+              <input type="text" class="form-control" id="pass-input" name="password"
+                aria-describedby="basic-addon3 basic-addon4">
+            </div>
+            <button type="submit" form="smb" class="btn btn-primary mb-3">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 px-5">
+
+    <!-- CUE STATUS -->
+    <div class="row justify-content-between">
+      <div class="col-md-4 equal-height">
+        <div class="section-content">
+          <h2 class="section-header">Up Next</h2>
+          <div id="up-next" class="content">
+            <p>No items in the queue.</p>
+          </div>
+        </div>
+        <button id="send-live" class="btn btn-success full-width-btn" disabled>Send Live</button>
+      </div>
+      <div id="live" class="col-md-4 equal-height">
+        <div class="section-content">
+          <h2 class="section-header">Live</h2>
+          <div id="live-text" class="content">
+            <p>No live item.</p>
+          </div>
+        </div>
+        <button id="clear-live" class="btn btn-danger full-width-btn" disabled>Clear Live</button>
+      </div>
+    </div>
+    <hr>
+    <!-- TITLES QUEUE -->
+    <h2 class="section-header">Titles</h2>
+    <ul class="list-group mt-3" id="cue-list">
+    </ul>
+    <hr>
+
+
+    <!-- Button trigger modal -->
+    <button id="add-title" type="button" class="btn btn-primary d-flex my-5" data-bs-toggle="modal"
+      data-bs-target="#addTitle">
+      <div class="mx-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+        </svg></div>
+    </button>
+
+
+    <!-- ADD TITLE -->
+    <div class="modal fade" id="addTitle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Cue</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/add" id="add-form">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+              </div>
+              <div class="form-group">
+                <label for="mode">Cue Type</label>
+                <select class="form-control" id="type" name="type">
+                  <option value="xml">XML</option>
+                  <!-- <option value="png">PNG</option> -->
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="add-cue" type="submit" form="add-form" class="btn btn-primary">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- EDIT MODAL -->
+  <div class="modal fade" id="editModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editModal">Edit Cue</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="/edit" id="edit-form">
+
+            <input type="hidden" id="edit-id" name="id" value="">
+            <div class="form-group">
+              <label for="edit-name">Name</label>
+              <input type="text" class="form-control" id="edit-name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-title">Title</label>
+              <input type="text" class="form-control" id="edit-title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-mode">Cue Mode</label>
+              <select class="form-control" id="edit-type" name="type">
+                <option value="xml">XML</option>
+                <option value="png">PNG</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="text-bg-danger text-center p-3" id="live-warning">CUE IS LIVE. CHANGES WILL UPDATE IMMEDIATELY</div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" form="edit-form" id="edit-save">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="../static/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script type="module" src="../static/js/script.js"></script>
+</body>
+
+</html>
